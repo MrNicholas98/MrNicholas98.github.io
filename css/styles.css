@@ -1,52 +1,95 @@
-/* Basic Global Styles */
-body {
-    font-family: Arial, sans-serif; /* Sets a common, clean font */
-    line-height: 1.6; /* Improves readability by adding space between lines */
-    margin: 0; /* Removes default browser margin around the page */
-    padding: 0; /* Removes default browser padding */
-    background-color: #f4f4f4; /* A light grey background for the whole page */
-    color: #333; /* Dark grey text color for better readability */
+/* General Section Styling */
+section {
+    padding: 40px 20px; /* Consistent padding for all content sections */
+    margin-bottom: 20px; /* Space between sections */
+    background-color: #fff; /* White background for sections */
+    border-radius: 8px; /* Slightly rounded corners for sections */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    max-width: 960px; /* Max width to keep content readable on large screens */
+    margin-left: auto; /* Center the section */
+    margin-right: auto; /* Center the section */
 }
 
-h1, h2, h3, h4, h5, h6 {
-    color: #0056b3; /* A nice blue color for all headings */
-    margin-bottom: 0.5em; /* Adds a bit of space below headings */
+section h2 {
+    text-align: center; /* Center section titles */
+    margin-bottom: 30px; /* More space below main section titles */
+    font-size: 2em; /* Larger font for section titles */
 }
 
-a {
-    color: #007bff; /* Blue for links */
-    text-decoration: none; /* Removes the default underline from links */
+/* Skills & Projects Specific Styling */
+.skills-projects ul {
+    list-style: none; /* Remove default bullet points */
+    padding: 0;
+    display: flex; /* Arrange list items in a row */
+    flex-wrap: wrap; /* Allow items to wrap to next line if needed */
+    justify-content: center; /* Center the skill categories */
+    gap: 20px; /* Space between skill categories */
+    margin-bottom: 40px; /* Space between skills list and projects */
 }
 
-a:hover {
-    text-decoration: underline; /* Adds underline back on hover for user feedback */
-}
-/* Hero Section Styling */
-.hero {
-    text-align: center; /* Centers all text and inline elements within the hero div */
-    padding: 50px 20px; /* Adds space above and below the content */
-    background-color: #ffffff; /* White background for the hero section */
-    color: #333; /* Text color for the hero section */
-    border-bottom: 1px solid #ddd; /* A subtle line at the bottom */
+.skills-projects ul li {
+    background-color: #e2eafc; /* Light blue background for skill items */
+    padding: 12px 20px;
+    border-radius: 25px; /* Pill-shaped skill items */
+    font-weight: bold;
+    color: #0056b3; /* Darker blue text */
+    border: 1px solid #c8d9ff; /* Subtle border */
+    text-align: center;
 }
 
-.hero h1 {
-    font-size: 2.8em; /* Larger font size for your name */
-    margin-bottom: 10px; /* Space below your name */
-    color: #333; /* Make your name darker, maybe not blue */
+.skills-projects h3 {
+    text-align: center; /* Center sub-headings */
+    margin-top: 30px; /* Space above sub-headings */
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #555; /* Slightly softer color for sub-headings */
 }
 
-.hero p {
-    font-size: 1.2em; /* Slightly larger font for the tagline */
-    color: #666; /* Lighter grey for the tagline */
+.project-list {
+    display: grid; /* Use grid for layout */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive columns */
+    gap: 30px; /* Space between project items */
 }
 
-/* Styling for your profile picture */
-.hero img {
-    width: 200px; /* Sets the width of the image to 200 pixels */
-    height: auto; /* Maintains the aspect ratio (prevents stretching) */
-    border-radius: 50%; /* Makes the image circular if it's square */
-    display: block; /* Helps with centering */
-    margin: 20px auto; /* Adds space around the image and centers it */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow */
+.project-item {
+    background-color: #f9f9f9; /* Lighter background for project cards */
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* More prominent shadow for cards */
+    transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+    text-align: center; /* Center text within project items */
+}
+
+.project-item:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+}
+
+.project-item h4 {
+    color: #0056b3;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+}
+
+.project-item p {
+    font-size: 0.95em;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.project-item a {
+    display: inline-block; /* Allows padding and margin */
+    margin: 5px 10px; /* Space between links */
+    padding: 8px 15px;
+    background-color: #007bff; /* Blue button background */
+    color: white; /* White text on button */
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.project-item a:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    text-decoration: none; /* No underline on hover for buttons */
 }
