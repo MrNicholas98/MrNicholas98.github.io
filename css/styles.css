@@ -1,95 +1,427 @@
-/* General Section Styling */
-section {
-    padding: 40px 20px; /* Consistent padding for all content sections */
-    margin-bottom: 20px; /* Space between sections */
-    background-color: #fff; /* White background for sections */
-    border-radius: 8px; /* Slightly rounded corners for sections */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    max-width: 960px; /* Max width to keep content readable on large screens */
-    margin-left: auto; /* Center the section */
-    margin-right: auto; /* Center the section */
+/* Import Google Font - Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+/* Base Styles */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --accent-color: #28a745; /* For potential future use or highlights */
+    --background-light: #f8f9fa;
+    --background-white: #ffffff;
+    --text-dark: #343a40;
+    --text-medium: #6c757d;
+    --border-light: #e0e0e0;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.08);
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-light); /* Light grey background for the whole page */
+    color: var(--text-dark); /* Dark text for readability */
+    -webkit-font-smoothing: antialiased; /* Smoother font rendering */
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure box-sizing is border-box for all elements for easier layout */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Global Link Styles */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3; /* Darker blue on hover */
+    text-decoration: underline;
+}
+
+/* Header & Hero Section Styling */
+header {
+    background: linear-gradient(135deg, var(--primary-color), #0056b3); /* Blue gradient */
+    color: #fff;
+    padding: 60px 20px 40px; /* More padding */
+    text-align: center;
+    position: relative; /* For image positioning */
+    border-bottom-left-radius: 20px; /* Rounded corners for the bottom of the header */
+    border-bottom-right-radius: 20px;
+    box-shadow: 0 4px 8px var(--shadow-light); /* Stronger shadow for header */
+}
+
+.hero {
+    max-width: 800px; /* Constrain hero content width */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero h1 {
+    font-size: 3.2em; /* Larger, more impactful heading */
+    margin-bottom: 10px;
+    font-weight: 700; /* Bold */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* Subtle text shadow */
+}
+
+.hero p {
+    font-size: 1.3em; /* Larger tagline */
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-weight: 300; /* Lighter weight */
+    opacity: 0.9;
+}
+
+.hero img {
+    width: 200px; /* Consistent image size */
+    height: 200px;
+    border-radius: 50%; /* Make it perfectly circular */
+    object-fit: cover; /* Ensure image covers the area without distortion */
+    border: 6px solid rgba(255, 255, 255, 0.8); /* White border around picture */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Stronger shadow for picture */
+    margin-top: 20px; /* Space below paragraph */
+    transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+}
+
+.hero img:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* General Section Styling */
+section {
+    padding: 60px 20px; /* Increased padding for more breathing room */
+    margin-bottom: 30px; /* More space between sections */
+    background-color: var(--background-white); /* White background for sections */
+    border-radius: 12px; /* More rounded corners for sections */
+    box-shadow: 0 4px 15px var(--shadow-light); /* Stronger, softer shadow for depth */
+    max-width: 1000px; /* Slightly wider max-width for content */
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeIn 0.8s ease-out forwards; /* Fade-in animation for sections */
+    opacity: 0; /* Start hidden for animation */
+    transform: translateY(20px); /* Start slightly below for animation */
+}
+
+/* Animation for sections */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+section:nth-child(2) { animation-delay: 0.1s; } /* Stagger animation */
+section:nth-child(3) { animation-delay: 0.2s; }
+section:nth-child(4) { animation-delay: 0.3s; }
+section:nth-child(5) { animation-delay: 0.4s; }
+
+
 section h2 {
-    text-align: center; /* Center section titles */
-    margin-bottom: 30px; /* More space below main section titles */
-    font-size: 2em; /* Larger font for section titles */
+    text-align: center;
+    margin-bottom: 40px; /* More space below main section titles */
+    font-size: 2.8em; /* Larger font for section titles */
+    color: var(--primary-color); /* Primary color for main titles */
+    font-weight: 700;
+    position: relative;
+}
+
+section h2::after { /* Underline effect for section titles */
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: var(--accent-color); /* Accent color underline */
+    margin: 15px auto 0; /* Center and space below title */
+    border-radius: 2px;
 }
 
 /* Skills & Projects Specific Styling */
+.skills-projects h3 {
+    text-align: center;
+    margin-top: 40px; /* More space above sub-headings */
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
 .skills-projects ul {
-    list-style: none; /* Remove default bullet points */
+    list-style: none;
     padding: 0;
-    display: flex; /* Arrange list items in a row */
-    flex-wrap: wrap; /* Allow items to wrap to next line if needed */
-    justify-content: center; /* Center the skill categories */
-    gap: 20px; /* Space between skill categories */
-    margin-bottom: 40px; /* Space between skills list and projects */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px; /* Slightly tighter space between skill items */
+    margin-bottom: 50px; /* More space between skills list and projects */
 }
 
 .skills-projects ul li {
     background-color: #e2eafc; /* Light blue background for skill items */
-    padding: 12px 20px;
-    border-radius: 25px; /* Pill-shaped skill items */
-    font-weight: bold;
+    padding: 10px 18px; /* Slightly smaller padding */
+    border-radius: 20px; /* More pill-shaped */
+    font-weight: 500; /* Medium weight */
     color: #0056b3; /* Darker blue text */
     border: 1px solid #c8d9ff; /* Subtle border */
     text-align: center;
+    font-size: 0.95em;
+    white-space: nowrap; /* Keep skill tags on one line */
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.skills-projects h3 {
-    text-align: center; /* Center sub-headings */
-    margin-top: 30px; /* Space above sub-headings */
-    margin-bottom: 20px;
-    font-size: 1.5em;
-    color: #555; /* Slightly softer color for sub-headings */
+.skills-projects ul li:hover {
+    background-color: #d0e0ff; /* Lighter blue on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
 }
 
 .project-list {
-    display: grid; /* Use grid for layout */
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive columns */
-    gap: 30px; /* Space between project items */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Slightly wider min width for cards */
+    gap: 30px;
 }
 
 .project-item {
-    background-color: #f9f9f9; /* Lighter background for project cards */
-    border: 1px solid #eee;
-    border-radius: 10px;
-    padding: 25px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* More prominent shadow for cards */
-    transition: transform 0.3s ease-in-out; /* Smooth hover effect */
-    text-align: center; /* Center text within project items */
+    background-color: #fff; /* White background for project cards */
+    border: 1px solid var(--border-light);
+    border-radius: 12px; /* More rounded corners */
+    padding: 30px; /* Increased padding */
+    box-shadow: 0 6px 20px var(--shadow-medium); /* More prominent, softer shadow */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Push buttons to bottom */
 }
 
 .project-item:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
+    transform: translateY(-8px); /* More pronounced lift effect on hover */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
 }
 
 .project-item h4 {
-    color: #0056b3;
-    font-size: 1.3em;
+    color: var(--primary-color);
+    font-size: 1.5em; /* Larger project title */
     margin-bottom: 15px;
+    font-weight: 700;
 }
 
 .project-item p {
-    font-size: 0.95em;
-    color: #666;
-    margin-bottom: 15px;
+    font-size: 1em; /* Standard font size */
+    color: var(--text-medium);
+    margin-bottom: 20px; /* Space above links */
+    flex-grow: 1; /* Allow paragraph to take up available space */
+}
+
+.project-item .project-links { /* Container for project buttons */
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap; /* Allow links to wrap on small screens */
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
 }
 
 .project-item a {
-    display: inline-block; /* Allows padding and margin */
-    margin: 5px 10px; /* Space between links */
-    padding: 8px 15px;
-    background-color: #007bff; /* Blue button background */
-    color: white; /* White text on button */
-    border-radius: 5px;
+    display: inline-block;
+    padding: 12px 25px; /* Larger buttons */
+    background-color: var(--primary-color); /* Primary blue for buttons */
+    color: white;
+    border-radius: 8px; /* More rounded buttons */
     text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    font-weight: 600; /* Semibold */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Subtle button shadow */
 }
 
 .project-item a:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    text-decoration: none; /* No underline on hover for buttons */
+    background-color: #0056b3;
+    transform: translateY(-2px); /* Slight lift on hover */
+    text-decoration: none;
+}
+
+/* About Me & Contact Section Specifics */
+.about-me ul {
+    list-style: disc; /* Keep default bullet points */
+    padding-left: 20px;
+    margin-bottom: 25px;
+}
+
+.about-me ul li {
+    margin-bottom: 8px;
+    color: var(--text-dark);
+}
+
+.contact p {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+/* Footer Styling */
+footer {
+    background-color: var(--text-dark); /* Dark background for footer */
+    color: #fff;
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 50px; /* Space above footer */
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    font-size: 0.9em;
+}
+
+/* Scroll-to-Top Button Styling */
+#scrollToTopBtn {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed position on screen */
+    bottom: 30px; /* 30px from the bottom */
+    right: 30px; /* 30px from the right */
+    z-index: 99; /* High z-index to be on top of other elements */
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    background-color: var(--accent-color); /* Use accent color for button */
+    color: white; /* White text */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    padding: 15px 20px; /* Some padding */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 1.1em; /* Larger font size */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+    font-weight: 600;
+}
+
+#scrollToTopBtn:hover {
+    background-color: #218838; /* Darker green on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+/* Responsive Adjustments (Media Queries) */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.5em; /* Smaller heading on tablets */
+    }
+
+    .hero p {
+        font-size: 1.1em; /* Smaller tagline on tablets */
+    }
+
+    section {
+        padding: 40px 15px; /* Reduce padding on smaller screens */
+        margin-bottom: 25px;
+    }
+
+    section h2 {
+        font-size: 2.2em; /* Smaller section titles */
+        margin-bottom: 30px;
+    }
+
+    .skills-projects ul li {
+        padding: 8px 15px; /* Smaller skill tags */
+        font-size: 0.85em;
+    }
+
+    .project-list {
+        grid-template-columns: 1fr; /* Single column layout for projects on smaller screens */
+    }
+
+    .project-item {
+        padding: 20px;
+    }
+
+    .project-item h4 {
+        font-size: 1.3em;
+    }
+
+    .project-item a {
+        padding: 10px 20px; /* Smaller buttons */
+        font-size: 0.9em;
+    }
+
+    .about-me ul {
+        padding-left: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 40px 15px 30px;
+    }
+
+    .hero h1 {
+        font-size: 2em; /* Even smaller heading on mobile */
+    }
+
+    .hero p {
+        font-size: 1em; /* Standard size tagline on mobile */
+    }
+
+    .hero img {
+        width: 150px; /* Smaller image on mobile */
+        height: 150px;
+        border: 4px solid rgba(255, 255, 255, 0.8);
+    }
+
+    section {
+        padding: 30px 10px; /* Minimal padding on very small screens */
+        margin-bottom: 20px;
+    }
+
+    section h2 {
+        font-size: 1.8em; /* Smallest section titles on mobile */
+        margin-bottom: 25px;
+    }
+
+    section h2::after {
+        width: 60px; /* Shorter underline */
+        height: 3px;
+        margin-top: 10px;
+    }
+
+    .skills-projects h3 {
+        font-size: 1.4em;
+        margin-top: 25px;
+        margin-bottom: 20px;
+    }
+
+    .skills-projects ul {
+        gap: 10px; /* Tighter gap */
+        margin-bottom: 30px;
+    }
+
+    .skills-projects ul li {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+
+    .project-item {
+        padding: 15px;
+    }
+
+    .project-item h4 {
+        font-size: 1.1em;
+        margin-bottom: 10px;
+    }
+
+    .project-item p {
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+
+    .project-item a {
+        padding: 8px 15px;
+        font-size: 0.8em;
+    }
+
+    footer {
+        padding: 20px 10px;
+        font-size: 0.8em;
+    }
 }
