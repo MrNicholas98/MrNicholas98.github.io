@@ -1,0 +1,187 @@
+/* Import Google Font - Poppins for a fun, readable game font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* General Body Styling */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); /* Lively gradient background */
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #333; /* Dark grey text */
+}
+
+/* Game Container Styling */
+.game-container {
+    background-color: #ffffff; /* White background for the game card */
+    border-radius: 20px; /* Rounded corners */
+    padding: 40px 30px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Stronger, softer shadow */
+    width: 100%;
+    max-width: 500px; /* Max width for desktop */
+    text-align: center;
+    border: 2px solid #66bb6a; /* Green border */
+    position: relative;
+    overflow: hidden; /* Ensure elements stay within bounds */
+    animation: scaleIn 0.5s ease-out forwards; /* Scale-in animation */
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Heading Style */
+h1 {
+    color: #4CAF50; /* Green heading */
+    font-size: 2.8em;
+    margin-bottom: 15px;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Instructions Text */
+.instructions {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+/* Input Section */
+.input-section {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Space between input and button */
+    margin-bottom: 25px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+#guessInput {
+    width: 100%;
+    max-width: 250px; /* Limit input width */
+    padding: 15px 20px;
+    border: 2px solid #ADD8E6; /* Light blue border */
+    border-radius: 10px;
+    font-size: 1.2em;
+    text-align: center;
+    outline: none; /* Remove default outline on focus */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#guessInput:focus {
+    border-color: #64B5F6; /* Brighter blue on focus */
+    box-shadow: 0 0 8px rgba(100, 181, 246, 0.5);
+}
+
+/* Button Styling */
+.button {
+    padding: 15px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* Subtle button shadow */
+    color: #fff;
+}
+
+#checkBtn {
+    background-color: #4CAF50; /* Green check button */
+}
+
+#checkBtn:hover {
+    background-color: #43A047; /* Darker green on hover */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+#checkBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#newGameBtn {
+    background-color: #2196F3; /* Blue new game button */
+    margin-top: 20px; /* Space above new game button */
+    padding: 12px 20px; /* Slightly smaller new game button */
+    font-size: 1.1em;
+    display: none; /* Hidden by default until game ends */
+}
+
+#newGameBtn:hover {
+    background-color: #1976D2; /* Darker blue on hover */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+#newGameBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Message Text Styling (for game feedback) */
+.message {
+    font-size: 1.4em; /* Larger message text */
+    font-weight: 600;
+    min-height: 1.5em; /* Ensure consistent height even when empty */
+    color: #3F51B5; /* Blue for messages */
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2.2em;
+    }
+
+    .instructions {
+        font-size: 1em;
+    }
+
+    .input-section {
+        flex-direction: column; /* Stack input and button vertically */
+        gap: 10px;
+    }
+
+    #guessInput, .button {
+        max-width: none; /* Allow full width */
+        width: 100%;
+    }
+
+    .game-container {
+        padding: 30px 20px;
+        border-radius: 15px;
+    }
+
+    .message {
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 400px) {
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .button {
+        font-size: 1.1em;
+        padding: 12px 20px;
+    }
+
+    #guessInput {
+        padding: 12px 15px;
+        font-size: 1.1em;
+    }
+}
