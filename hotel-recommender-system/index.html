@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Recommender</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="app" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl transform transition-all duration-300">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Hotel Recommender</h1>
+        
+        <p class="text-gray-600 text-center mb-6">Select a hotel and let's find some similar recommendations for you.</p>
+
+        <div class="mb-6">
+            <label for="hotel-select" class="block text-gray-700 font-semibold mb-2">Select a Hotel:</label>
+            <select id="hotel-select" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                <option value="" disabled selected>-- Choose a hotel --</option>
+            </select>
+        </div>
+
+        <button id="recommend-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-md transform hover:scale-105" disabled>
+            Get Recommendations
+        </button>
+        
+        <div id="loading" class="hidden text-center mt-6">
+            <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
+                <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+            </div>
+            <p class="text-gray-500 mt-2">Finding recommendations...</p>
+        </div>
+
+        <div id="results" class="hidden mt-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Recommended Hotels</h2>
+            <div id="recommendation-list" class="space-y-4">
+                <!-- Recommendations will be injected here -->
+            </div>
+        </div>
+
+        <div id="error-message" class="hidden text-red-500 text-center mt-6">
+            <p>An error occurred. Please try again.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hotelSelect = document.getElementById('hotel-select');
+            const recommendBtn = document.getElementById('recommend-btn');
+            const resultsDiv = document.getElementById('results');
+            const recommendationList = document.getElementById('recommendation-list');
+            const loadingIndicator = document.getElementById('loading');
+            const errorMessage = document.getElementById('error-message');
+
+            let df = null;
+            let cosine_sim = null;
+            
+            // This is the core recommendation logic from your main.py, translated to JavaScript
+            function get_recommendations(hotel_name, cosine_sim_matrix, df_data) {
+                if (!df_data || !cosine_sim_matrix) {
+                    console.error("Data not loaded yet.");
+                    return [];
+                }
+
+                const indices = {};
+                df_data.forEach((row, index) => {
+                    indices[row.hotel_name] = index;
+                });
+
+                if (!indices[hotel_name]) {
+                    console.error("Hotel not found.");
+                    return [];
+                }
+
+                const idx = indices[hotel_name];
+                const sim_scores = cosine_sim_matrix[idx];
+                const sim_scores_with_indices = sim_scores.map((score, i) => [i, score]).sort((a, b) => b[1] - a[1]);
+                
+                const sim_scores_without_self = sim_scores_with_indices.slice(1, 11);
+
+                const hotel_indices = sim_scores_without_self.map(item => item[0]);
+
+                const recommended_hotels = [];
+                hotel_indices.forEach(i => {
+                    recommended_hotels.push({
+                        hotel_name: df_data[i].hotel_name,
+                        address: df_data[i].address,
+                        city: df_data[i].city,
+                        state: df_data[i].state,
+                        country: df_data[i].country,
+                        score: sim_scores_without_self.find(item => item[0] === i)[1]
+                    });
+                });
+                return recommended_hotels;
+            }
+
+            // Function to generate and display a recommendation card
+            function createRecommendationCard(hotel) {
+                const card = document.createElement('div');
+                card.className = 'bg-gray-50 p-4 rounded-md shadow-sm border border-gray-200';
+                card.innerHTML = `
+                    <h3 class="font-bold text-lg text-gray-800">${hotel.hotel_name}</h3>
+                    <p class="text-sm text-gray-600">${hotel.address}, ${hotel.city}, ${hotel.state}, ${hotel.country}</p>
+                    <p class="text-sm text-blue-500 font-medium mt-1">Similarity Score: ${hotel.score.toFixed(4)}</p>
+                `;
+                return card;
+            }
+            
+            // Now we use the data object directly instead of fetching it.
+            function initializeData() {
+                try {
+                    df = data.df;
+                    cosine_sim = data.cosine_sim;
+
+                    // Populate the dropdown menu with hotel names
+                    df.forEach(hotel => {
+                        const option = document.createElement('option');
+                        option.value = hotel.hotel_name;
+                        option.textContent = hotel.hotel_name;
+                        hotelSelect.appendChild(option);
+                    });
+
+                    // Enable the button once data is loaded
+                    recommendBtn.disabled = false;
+                    recommendBtn.textContent = "Get Recommendations";
+                } catch (error) {
+                    console.error("Failed to initialize data:", error);
+                    errorMessage.textContent = "An internal error occurred. Please check the code.";
+                    errorMessage.classList.remove('hidden');
+                }
+            }
+            
+            // Event listener for the recommendation button
+            recommendBtn.addEventListener('click', () => {
+                const selectedHotel = hotelSelect.value;
+                if (!selectedHotel) {
+                    return;
+                }
+
+                // Show loading indicator and hide previous results
+                loadingIndicator.classList.remove('hidden');
+                resultsDiv.classList.add('hidden');
+                errorMessage.classList.add('hidden');
+
+                // Simulate a slight delay to show the loading state
+                setTimeout(() => {
+                    try {
+                        const recommendations = get_recommendations(selectedHotel, cosine_sim, df);
+                        
+                        recommendationList.innerHTML = '';
+                        if (recommendations.length > 0) {
+                            recommendations.forEach(hotel => {
+                                recommendationList.appendChild(createRecommendationCard(hotel));
+                            });
+                            resultsDiv.classList.remove('hidden');
+                        } else {
+                            errorMessage.textContent = "No recommendations found for this hotel.";
+                            errorMessage.classList.remove('hidden');
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        errorMessage.textContent = "An error occurred while getting recommendations.";
+                        errorMessage.classList.remove('hidden');
+                    } finally {
+                        loadingIndicator.classList.add('hidden');
+                    }
+                }, 500); // 500ms delay
+            });
+
+            // Handle dropdown change to enable/disable button
+            hotelSelect.addEventListener('change', () => {
+                recommendBtn.disabled = !hotelSelect.value;
+            });
+            
+            // Initialize data loading
+            initializeData();
+        });
+
+        // The pre-computed data from your project. This is a simplified example.
+        // In a real-world scenario, you would have a much larger dataset here.
+        // For demonstration, we'll embed the necessary hotel data and the similarity matrix.
+        const data = {
+            "df": [
+                {
+                    "hotel_name": "The Plaza Hotel",
+                    "address": "768 5th Ave",
+                    "city": "New York",
+                    "state": "NY",
+                    "country": "USA"
+                },
+                {
+                    "hotel_name": "Grand Hyatt New York",
+                    "address": "109 E 42nd St",
+                    "city": "New York",
+                    "state": "NY",
+                    "country": "USA"
+                },
+                {
+                    "hotel_name": "Four Seasons Hotel New York",
+                    "address": "57 E 57th St",
+                    "city": "New York",
+                    "state": "NY",
+                    "country": "USA"
+                },
+                {
+                    "hotel_name": "Hyatt Regency San Francisco",
+                    "address": "5 Embarcadero Ctr",
+                    "city": "San Francisco",
+                    "state": "CA",
+                    "country": "USA"
+                },
+                {
+                    "hotel_name": "W Hotel San Francisco",
+                    "address": "181 3rd St",
+                    "city": "San Francisco",
+                    "state": "CA",
+                    "country": "USA"
+                },
+                {
+                    "hotel_name": "Ritz-Carlton San Francisco",
+                    "address": "600 Stockton St",
+                    "city": "San Francisco",
+                    "state": "CA",
+                    "country": "USA"
+                }
+            ],
+            "cosine_sim": [
+                [1.0000, 0.4500, 0.7000, 0.1000, 0.0500, 0.0800],
+                [0.4500, 1.0000, 0.3500, 0.1200, 0.0700, 0.0600],
+                [0.7000, 0.3500, 1.0000, 0.0900, 0.0400, 0.1100],
+                [0.1000, 0.1200, 0.0900, 1.0000, 0.5500, 0.6000],
+                [0.0500, 0.0700, 0.0400, 0.5500, 1.0000, 0.4500],
+                [0.0800, 0.0600, 0.1100, 0.6000, 0.4500, 1.0000]
+            ]
+        };
+    </script>
+</body>
+</html>
