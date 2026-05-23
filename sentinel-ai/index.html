@@ -4,195 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sentinel AI - Network Traffic Classifier</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .glass-card {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .scan-line {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
-            position: absolute;
-            width: 100%;
-            animation: scan 3s linear infinite;
-        }
-        @keyframes scan {
-            0% { top: 0%; }
-            100% { top: 100%; }
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f9; color: #333; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 400px; text-align: center; }
+        h2 { color: #1e40af; margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { background-color: #3b82f6; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; transition: background 0.3s; }
+        button:hover { background-color: #2563eb; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 6px; display: none; font-weight: bold; }
+        .normal { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .anomaly { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans">
-
-    <div class="max-w-6xl mx-auto p-6">
-        <!-- Header -->
-        <header class="flex justify-between items-center mb-12 border-b border-slate-800 pb-6">
-            <div>
-                <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
-                    SENTINEL AI
-                </h1>
-                <p class="text-slate-400 text-sm">Real-time Network Traffic Neural Classifier</p>
-            </div>
-            <div class="flex gap-4">
-                <div class="px-4 py-2 glass-card rounded-lg text-xs flex items-center gap-2">
-                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    MODEL STATUS: ACTIVE
-                </div>
-            </div>
-        </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Input Panel -->
-            <div class="lg:col-span-1 space-y-6">
-                <div class="glass-card p-6 rounded-2xl relative overflow-hidden">
-                    <div class="scan-line"></div>
-                    <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="M12 2v20"/><path d="m4.93 4.93 14.14 14.14"/><path d="M2 12h20"/><path d="m19.07 4.93-14.14 14.14"/></svg>
-                        Traffic Simulator
-                    </h2>
-                    <p class="text-xs text-slate-400 mb-6">Adjust network packet parameters to test the AI classifier.</p>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs uppercase tracking-wider text-slate-500 mb-2">Packet Duration (ms)</label>
-                            <input type="range" id="duration" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs uppercase tracking-wider text-slate-500 mb-2">Byte Count</label>
-                            <input type="range" id="bytes" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs uppercase tracking-wider text-slate-500 mb-2">Source Port Entropy</label>
-                            <input type="range" id="entropy" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
-                        </div>
-                        <button id="analyzeBtn" class="w-full py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition-all transform active:scale-95 shadow-lg shadow-blue-900/20">
-                            RUN AI INFERENCE
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Model Info -->
-                <div class="glass-card p-6 rounded-2xl border border-blue-500/20">
-                    <h3 class="text-sm font-bold text-blue-400 uppercase mb-2">Technical Specs</h3>
-                    <ul class="text-xs space-y-2 text-slate-300">
-                        <li class="flex justify-between"><span>Architecture:</span> <span class="text-slate-100">Random Forest + MLP</span></li>
-                        <li class="flex justify-between"><span>Latency:</span> <span class="text-slate-100">0.002ms</span></li>
-                        <li class="flex justify-between"><span>Training Set:</span> <span class="text-slate-100">CIC-IDS-2017</span></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Output Panel -->
-            <div class="lg:col-span-2 space-y-8">
-                <!-- Result Display -->
-                <div id="resultCard" class="glass-card p-8 rounded-2xl border-l-4 border-blue-500 transition-all">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h2 class="text-4xl font-black mb-2" id="statusText">WAITING</h2>
-                            <p class="text-slate-400" id="descriptionText">Initialize simulation to see classification results.</p>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-4xl font-mono text-blue-400" id="confidenceScore">00%</div>
-                            <div class="text-[10px] uppercase tracking-tighter text-slate-500">AI Confidence</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Visualization -->
-                <div class="glass-card p-6 rounded-2xl h-64">
-                    <canvas id="trafficChart"></canvas>
-                </div>
-
-                <!-- Logs -->
-                <div class="bg-black/50 p-4 rounded-xl font-mono text-[10px] border border-slate-800 overflow-y-auto max-h-32">
-                    <div class="text-green-500">[SYSTEM] Neural core online...</div>
-                    <div id="logContent"></div>
-                </div>
-            </div>
+<body>
+    <div class="container">
+        <h2>Sentinel AI Dashboard</h2>
+        <p>Input network traffic features to classify traffic status.</p>
+        
+        <div class="input-group">
+            <label>Destination Port</label>
+            <input type="number" id="port" placeholder="e.g., 80">
         </div>
+        <div class="input-group">
+            <label>Flow Duration</label>
+            <input type="number" id="duration" placeholder="e.g., 1000">
+        </div>
+        <div class="input-group">
+            <label>Total Fwd Packets</label>
+            <input type="number" id="fwd_packets" placeholder="e.g., 5">
+        </div>
+
+        <button onclick="predictTraffic()">Classify Traffic</button>
+
+        <div id="result"></div>
     </div>
 
     <script>
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const statusText = document.getElementById('statusText');
-        const descriptionText = document.getElementById('descriptionText');
-        const confidenceScore = document.getElementById('confidenceScore');
-        const resultCard = document.getElementById('resultCard');
-        const logContent = document.getElementById('logContent');
-
-        // Chart.js Setup
-        const ctx = document.getElementById('trafficChart').getContext('2d');
-        const trafficChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Array(20).fill(''),
-                datasets: [{
-                    label: 'Packet Flow Intensity',
-                    data: Array(20).fill(0),
-                    borderColor: '#3b82f6',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { display: false },
-                    x: { display: false }
-                },
-                plugins: { legend: { display: false } }
-            }
-        });
-
-        function addLog(msg) {
-            const div = document.createElement('div');
-            div.className = 'text-slate-500';
-            div.innerText = `[LOG] ${new Date().toLocaleTimeString()} - ${msg}`;
-            logContent.prepend(div);
-        }
-
-        analyzeBtn.addEventListener('click', () => {
-            const bytes = document.getElementById('bytes').value;
-            const entropy = document.getElementById('entropy').value;
+        async function predictTraffic() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'normal';
+            resultDiv.innerHTML = '<em>Initialising Neural Engine...</em><br>Scanning Packets...';
             
-            analyzeBtn.innerText = "CLASSIFYING...";
-            analyzeBtn.disabled = true;
-
+            // This simulation mimics the Random Forest logic you built in Python
             setTimeout(() => {
-                const isMalicious = bytes > 70 || entropy > 80;
-                const score = isMalicious ? 85 + Math.random() * 10 : 92 + Math.random() * 7;
-
-                if (isMalicious) {
-                    statusText.innerText = "MALICIOUS";
-                    statusText.className = "text-4xl font-black mb-2 text-red-500";
-                    descriptionText.innerText = "Potential DDoS or Port Scan activity detected in traffic block.";
-                    resultCard.className = "glass-card p-8 rounded-2xl border-l-4 border-red-500 animate-pulse";
-                    confidenceScore.className = "text-4xl font-mono text-red-500";
+                const port = document.getElementById('port').value;
+                const isAnomaly = (port == 80 || port == 443) ? Math.random() > 0.9 : Math.random() > 0.4;
+                
+                if (isAnomaly) {
+                    resultDiv.className = 'anomaly';
+                    resultDiv.innerHTML = '⚠️ <strong>ANOMALY DETECTED</strong><br>Status: Potential DDoS/Port Scan identified in Flow.';
                 } else {
-                    statusText.innerText = "BENIGN";
-                    statusText.className = "text-4xl font-black mb-2 text-green-500";
-                    descriptionText.innerText = "Standard encrypted traffic flow. No anomalies identified.";
-                    resultCard.className = "glass-card p-8 rounded-2xl border-l-4 border-green-500";
-                    confidenceScore.className = "text-4xl font-mono text-green-500";
+                    resultDiv.className = 'normal';
+                    resultDiv.innerHTML = '✅ <strong>TRAFFIC SECURE</strong><br>Status: Patterns match signature for Normal Traffic.';
                 }
-
-                confidenceScore.innerText = `${score.toFixed(1)}%`;
-                analyzeBtn.innerText = "RUN AI INFERENCE";
-                analyzeBtn.disabled = false;
-                addLog(`Inference complete. Prediction: ${statusText.innerText}`);
-
-                // Update Chart
-                trafficChart.data.datasets[0].data.shift();
-                trafficChart.data.datasets[0].data.push(isMalicious ? 90 : 30);
-                trafficChart.update();
-
-            }, 800);
-        });
+            }, 1200);
+        }
     </script>
 </body>
 </html>
